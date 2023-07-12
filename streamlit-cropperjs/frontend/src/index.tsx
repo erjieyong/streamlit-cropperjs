@@ -1,9 +1,10 @@
-import { Streamlit, RenderData } from "streamlit-component-lib"
+import { RenderData, Streamlit } from "streamlit-component-lib"
 
 // Add text and a button to the DOM. (You could also add these directly
 // to index.html.)
 const span = document.body.appendChild(document.createElement("span"))
-const textNode = span.appendChild(document.createTextNode(""))
+const img = span.appendChild(document.createElement("img"))
+// span.appendChild(document.createElement("br"))
 const button = span.appendChild(document.createElement("button"))
 button.textContent = "Click Me!"
 
@@ -51,16 +52,30 @@ function onRender(event: Event): void {
 
   // RenderData.args is the JSON dictionary of arguments sent from the
   // Python script.
-  let name = data.args["name"]
+  let pic = data.args["pic"]
+  // convert the pic into uint8array
+  let arrayBufferView = new Uint8Array(pic);
+  // display the image
+  img.src = URL.createObjectURL(
+    new Blob([arrayBufferView], { type: 'image/png' } /* (1) */)
+  );
+  img.style.maxHeight = "100%"
+  img.style.maxWidth = "100%"
 
+  console.log("scrollheight " + span.scrollHeight)
   // Show "Hello, name!" with a non-breaking space afterwards.
-  textNode.textContent = `Hello, ${name}! ` + String.fromCharCode(160)
+  // textNode.textContent = `Hello, ${name}! ` + String.fromCharCode(160)
 
   // We tell Streamlit to update our frameHeight after each render event, in
   // case it has changed. (This isn't strictly necessary for the example
   // because our height stays fixed, but this is a low-cost function, so
   // there's no harm in doing it redundantly.)
-  Streamlit.setFrameHeight()
+  // wait for image to load finish first before runnning setFrameHeight
+  window.addEventListener("load", event => {
+    if (img.complete && img.naturalHeight !== 0){
+      Streamlit.setFrameHeight()
+    }
+  })
 }
 
 // Attach our `onRender` handler to Streamlit's render event.

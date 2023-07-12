@@ -43,7 +43,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def streamlit_cropperjs(name, key=None):
+def streamlit_cropperjs(pic, key=None):
     """Create a new instance of "streamlit_cropperjs".
 
     Parameters
@@ -70,7 +70,7 @@ def streamlit_cropperjs(name, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _streamlit_cropperjs(name=name, key=key, default=0)
+    component_value = _streamlit_cropperjs(pic=pic, key=key, default=0)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
@@ -83,15 +83,7 @@ def streamlit_cropperjs(name, key=None):
 if not _RELEASE:
     import streamlit as st
 
-    st.subheader("Component with constant args")
-
-    # Create an instance of our component with a constant `name` arg, and
-    # print its output value.
-    num_clicks = streamlit_cropperjs("World")
-    st.markdown("You've clicked %s times!" % int(num_clicks))
-
-    st.markdown("---")
-    st.subheader("Component with variable args")
+    st.subheader("Streamlit-Cropperjs")
 
     # Create a second instance of our component whose `name` arg will vary
     # based on a text_input widget.
@@ -101,6 +93,8 @@ if not _RELEASE:
     # it is considered a new instance and will be re-mounted on the frontend
     # and lose its current state. In this case, we want to vary the component's
     # "name" argument without having it get recreated.
-    name_input = st.text_input("Enter a name", value="Streamlit")
-    num_clicks = streamlit_cropperjs(name_input, key="foo")
-    st.markdown("You've clicked %s times!" % int(num_clicks))
+    pic = st.file_uploader("Upload a picture", key = "uploaded_pic")
+    if pic:
+        pic = pic.read()
+        num_clicks = streamlit_cropperjs(pic, key="foo")
+        st.markdown("You've clicked %s times!" % int(num_clicks))
