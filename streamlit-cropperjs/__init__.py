@@ -1,4 +1,7 @@
+import base64
 import os
+
+import numpy as np
 import streamlit.components.v1 as components
 
 # Create a _RELEASE constant. We'll set this to False while we're developing
@@ -35,7 +38,9 @@ else:
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
-    _streamlit_cropperjs = components.declare_component("streamlit_cropperjs", path=build_dir)
+    _streamlit_cropperjs = components.declare_component(
+        "streamlit_cropperjs", path=build_dir
+    )
 
 
 # Create a wrapper function for the component. This is an optional
@@ -93,8 +98,14 @@ if not _RELEASE:
     # it is considered a new instance and will be re-mounted on the frontend
     # and lose its current state. In this case, we want to vary the component's
     # "name" argument without having it get recreated.
-    pic = st.file_uploader("Upload a picture", key = "uploaded_pic")
+    pic = st.file_uploader("Upload a picture", key="uploaded_pic")
     if pic:
         pic = pic.read()
-        num_clicks = streamlit_cropperjs(pic, key="foo")
-        st.markdown("You've clicked %s times!" % int(num_clicks))
+        cropped_pic = streamlit_cropperjs(pic, key="foo")
+        if cropped_pic:
+            # print(type(cropped_pic))
+            # cropped_pic = base64.b64decode(cropped_pic)
+            # cropped_pic = np.frombuffer(cropped_pic, dtype=np.uint8)
+
+            ## the following works, but it always prompt a type error below. need to resolve it??
+            st.image(cropped_pic, output_format="PNG")

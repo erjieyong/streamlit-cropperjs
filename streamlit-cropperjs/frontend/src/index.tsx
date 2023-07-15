@@ -1,22 +1,30 @@
-import { RenderData, Streamlit } from "streamlit-component-lib"
+import Cropper from "cropperjs";
+import { RenderData, Streamlit } from "streamlit-component-lib";
 
 // Add text and a button to the DOM. (You could also add these directly
 // to index.html.)
-const span = document.body.appendChild(document.createElement("span"))
-const img = span.appendChild(document.createElement("img"))
-// span.appendChild(document.createElement("br"))
-const button = span.appendChild(document.createElement("button"))
-button.textContent = "Click Me!"
+const div = document.body.appendChild(document.createElement("div"))
+div.style.display = 'block';
+const img = div.appendChild(document.createElement("img"))
+// div.appendChild(document.createElement("br"))
+const button = div.appendChild(document.createElement("button"))
+const link = document.head.appendChild(document.createElement("link"))
+link.rel = "stylesheet";
+link.href = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
+// const script = document.head.appendChild(document.createElement("script"))
+// script.src = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"
+
+button.textContent = "Detect!"
 
 // Add a click handler to our button. It will send data back to Streamlit.
 let numClicks = 0
 let isFocused = false
-button.onclick = function(): void {
-  // Increment numClicks, and pass the new value back to
-  // Streamlit via `Streamlit.setComponentValue`.
-  numClicks += 1
-  Streamlit.setComponentValue(numClicks)
-}
+// button.onclick = function(): void {
+//   // Increment numClicks, and pass the new value back to
+//   // Streamlit via `Streamlit.setComponentValue`.
+//   numClicks += 1
+//   Streamlit.setComponentValue(numClicks)
+// }
 
 button.onfocus = function(): void {
   isFocused = true
@@ -24,6 +32,15 @@ button.onfocus = function(): void {
 
 button.onblur = function(): void {
   isFocused = false
+}
+
+function base64ToArrayBuffer(base64: string) {
+  var binaryString = atob(base64);
+  var bytes = new Uint8Array(binaryString.length);
+  for (var i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
 }
 
 /**
@@ -59,12 +76,38 @@ function onRender(event: Event): void {
   img.src = URL.createObjectURL(
     new Blob([arrayBufferView], { type: 'image/png' } /* (1) */)
   );
-  img.style.maxHeight = "100%"
+  // img.style.maxHeight = "90%"
   img.style.maxWidth = "100%"
+  img.id = data.args["key"]
+  img.style.display = "block"
+  // img.style.objectFit = "contain"
+  
+  // Cropper.js
+  var cropper = new Cropper(img, {
+    autoCropArea: 0.5,
+    viewMode: 0,
+    guides: false,
+    rotatable: false,
+    ready: function (){
+      button.addEventListener('click', function() {
+        //  FIX THIS. CURRENTLY ON 2nd CLICK, IT WILL OUTPUT ERROR!!
+        var croppedImage = cropper.getCroppedCanvas().toDataURL("image/png");
+    
+        // img2.src=croppedImage;
+        // Streamlit.setFrameHeight()
+      //   // console.log(croppedImage)
+      //   // var croppedImageByte = URL.createObjectURL(
+      //   //   new Blob([croppedImage], { type: 'image/png' } /* (1) */)
+      //   // );
+      //   // console.log(croppedImageByte)
+        Streamlit.setComponentValue(croppedImage)
+      })
+    }
+  });
 
-  console.log("scrollheight " + span.scrollHeight)
-  // Show "Hello, name!" with a non-breaking space afterwards.
-  // textNode.textContent = `Hello, ${name}! ` + String.fromCharCode(160)
+
+
+  
 
   // We tell Streamlit to update our frameHeight after each render event, in
   // case it has changed. (This isn't strictly necessary for the example

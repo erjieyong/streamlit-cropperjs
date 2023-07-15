@@ -8,18 +8,40 @@
             "type": "node",
             "request": "launch",
             "name": "npm start debug",
-            "cwd": "${fileDirname}",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "cwd": "C:/Users/kyunomi/Desktop/streamlit-cropperjs/streamlit-cropperjs/frontend",
+            // "skipFiles": [
+            //     "<node_internals>/**"
+            // ],
             "runtimeExecutable": "npm",
-            "runtimeArgs": [
+            "args": [
                 "start",
                 "--preserve-symlinks"
             ],
             // "outFiles": [
             //     "${workspaceFolder}/**/*.js"
             // ]
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach by Process ID",
+            "processId": "${command:PickProcess}"
+            "remoteRoot": "/streamlit-cropperjs/frontend"
+        },
+        {
+            // "name": "Python: Current File",
+            "name": "debug streamlit",
+            "type": "python",
+            "request": "launch",
+            "program": "c:/Users/kyunomi/anaconda3/envs/streamlit-cropperjs/Scripts/streamlit.exe",
+            "args":[
+                "run",
+                "__init__.py"
+            ],
+            "cwd": "${fileDirname}",
+            "console": "integratedTerminal",
+            "justMyCode": false
         }
     ]
+
 }
