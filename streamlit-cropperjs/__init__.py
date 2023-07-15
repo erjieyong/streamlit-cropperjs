@@ -48,7 +48,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def streamlit_cropperjs(pic, key=None):
+def streamlit_cropperjs(pic, btn_text, key=None):
     """Create a new instance of "streamlit_cropperjs".
 
     Parameters
@@ -75,7 +75,9 @@ def streamlit_cropperjs(pic, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _streamlit_cropperjs(pic=pic, key=key, default=0)
+    component_value = _streamlit_cropperjs(
+        pic=pic, btn_text=btn_text, key=key, default=None
+    )
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
@@ -101,13 +103,6 @@ if not _RELEASE:
     pic = st.file_uploader("Upload a picture", key="uploaded_pic")
     if pic:
         pic = pic.read()
-        cropped_pic = streamlit_cropperjs(pic, key="foo")
+        cropped_pic = streamlit_cropperjs(pic=pic, btn_text="Detect!", key="foo")
         if cropped_pic:
-            # print(type(cropped_pic))
-            # cropped_pic = base64.b64decode(cropped_pic)
-            # cropped_pic = np.frombuffer(cropped_pic, dtype=np.uint8)
-
-            ## the following works, but it always prompt a type error below. need to resolve it??
             st.image(cropped_pic, output_format="PNG")
-
-st.button("test")

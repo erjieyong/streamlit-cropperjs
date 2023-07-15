@@ -14,7 +14,6 @@ link.rel = "stylesheet";
 link.href = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
 
 // Prepare our button with focus detection
-button.textContent = "Detect!"
 button.style.padding = "0.25rem 0.75rem"
 button.style.backgroundColor = "white"
 button.style.borderRadius = "0.5rem"
@@ -52,8 +51,12 @@ function onRender(event: Event): void {
     button.style.color = `var(${isFocused ? "--primary-color" : "red"})`
   }
 
+  // Display button text
+  button.textContent = data.args["btn_text"]
+  
   // Disable our button if necessary.
   button.disabled = data.disabled
+  
 
   // RenderData.args is the JSON dictionary of arguments sent from the
   // Python script.
