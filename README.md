@@ -1,6 +1,6 @@
 # streamlit-cropperjs
 
-Integrating the amazing [cropperjs](https://github.com/fengyuanchen/cropperjs) using streamlit components. 
+Integrating the amazing [cropperjs](https://github.com/fengyuanchen/cropperjs) with streamlit. 
 
 This streamlit module is primarily built with mobile usage in mind.
 
