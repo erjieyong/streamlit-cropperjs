@@ -109,3 +109,5 @@ if not _RELEASE:
 
             ## the following works, but it always prompt a type error below. need to resolve it??
             st.image(cropped_pic, output_format="PNG")
+
+st.button("test")

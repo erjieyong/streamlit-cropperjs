@@ -1,30 +1,26 @@
 import Cropper from "cropperjs";
 import { RenderData, Streamlit } from "streamlit-component-lib";
 
-// Add text and a button to the DOM. (You could also add these directly
-// to index.html.)
-const div = document.body.appendChild(document.createElement("div"))
-div.style.display = 'block';
-const img = div.appendChild(document.createElement("img"))
-// div.appendChild(document.createElement("br"))
-const button = div.appendChild(document.createElement("button"))
+// Add image div and btn div. Separately add img and button to respective div
+// if we put them into same div, cropperjs will somehow generate the cropper tool
+// that is zoomed in and to the right which is undesirable
+const imageDiv = document.body.appendChild(document.createElement("div"))
+const img = imageDiv.appendChild(document.createElement("img"))
+const btnDiv = document.body.appendChild(document.createElement("div"))
+const button = btnDiv.appendChild(document.createElement("button"))
+// add cropperjs stylesheet. This is needed for cropperjs to work properly
 const link = document.head.appendChild(document.createElement("link"))
 link.rel = "stylesheet";
 link.href = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
-// const script = document.head.appendChild(document.createElement("script"))
-// script.src = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"
 
+// Prepare our button with focus detection
 button.textContent = "Detect!"
+button.style.padding = "0.25rem 0.75rem"
+button.style.backgroundColor = "white"
+button.style.borderRadius = "0.5rem"
+btnDiv.style.marginTop = "1rem"
 
-// Add a click handler to our button. It will send data back to Streamlit.
-let numClicks = 0
 let isFocused = false
-// button.onclick = function(): void {
-//   // Increment numClicks, and pass the new value back to
-//   // Streamlit via `Streamlit.setComponentValue`.
-//   numClicks += 1
-//   Streamlit.setComponentValue(numClicks)
-// }
 
 button.onfocus = function(): void {
   isFocused = true
@@ -32,15 +28,6 @@ button.onfocus = function(): void {
 
 button.onblur = function(): void {
   isFocused = false
-}
-
-function base64ToArrayBuffer(base64: string) {
-  var binaryString = atob(base64);
-  var bytes = new Uint8Array(binaryString.length);
-  for (var i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes.buffer;
 }
 
 /**
@@ -62,6 +49,7 @@ function onRender(event: Event): void {
     })`
     button.style.border = borderStyling
     button.style.outline = borderStyling
+    button.style.color = `var(${isFocused ? "--primary-color" : "red"})`
   }
 
   // Disable our button if necessary.
@@ -76,49 +64,34 @@ function onRender(event: Event): void {
   img.src = URL.createObjectURL(
     new Blob([arrayBufferView], { type: 'image/png' } /* (1) */)
   );
-  // img.style.maxHeight = "90%"
+  img.style.maxHeight = "100%"
   img.style.maxWidth = "100%"
   img.id = data.args["key"]
-  img.style.display = "block"
-  // img.style.objectFit = "contain"
+
   
   // Cropper.js
   var cropper = new Cropper(img, {
     autoCropArea: 0.5,
-    viewMode: 0,
+    viewMode: 2,
     guides: false,
     rotatable: false,
     ready: function (){
+      // We tell Streamlit to update our frameHeight after each render event, in
+      // case it has changed. (This isn't strictly necessary for the example
+      // because our height stays fixed, but this is a low-cost function, so
+      // there's no harm in doing it redundantly.)
+      // wait for image to load finish first before runnning setFrameHeight
+      Streamlit.setFrameHeight()
+
+      // Add event listener to our button.
+      // Send image data back to streamlit once button clicked
       button.addEventListener('click', function() {
-        //  FIX THIS. CURRENTLY ON 2nd CLICK, IT WILL OUTPUT ERROR!!
         var croppedImage = cropper.getCroppedCanvas().toDataURL("image/png");
-    
-        // img2.src=croppedImage;
-        // Streamlit.setFrameHeight()
-      //   // console.log(croppedImage)
-      //   // var croppedImageByte = URL.createObjectURL(
-      //   //   new Blob([croppedImage], { type: 'image/png' } /* (1) */)
-      //   // );
-      //   // console.log(croppedImageByte)
+        // Push croppedImage to streamlit backend
         Streamlit.setComponentValue(croppedImage)
       })
-    }
+    },
   });
-
-
-
-  
-
-  // We tell Streamlit to update our frameHeight after each render event, in
-  // case it has changed. (This isn't strictly necessary for the example
-  // because our height stays fixed, but this is a low-cost function, so
-  // there's no harm in doing it redundantly.)
-  // wait for image to load finish first before runnning setFrameHeight
-  window.addEventListener("load", event => {
-    if (img.complete && img.naturalHeight !== 0){
-      Streamlit.setFrameHeight()
-    }
-  })
 }
 
 // Attach our `onRender` handler to Streamlit's render event.
