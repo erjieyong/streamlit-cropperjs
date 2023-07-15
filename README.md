@@ -1,6 +1,8 @@
 # streamlit-cropperjs
 
-Integrating the amazing [cropperjs]("https://github.com/fengyuanchen/cropperjs") into streamlit using components. This is meant to be a streamlit module built with mobile usage in mind.
+Integrating the amazing [cropperjs](https://github.com/fengyuanchen/cropperjs) using streamlit components. 
+
+This streamlit module is primarily built with mobile usage in mind.
 
 ## Features
 - Crop and return image data
@@ -8,4 +10,4 @@ Integrating the amazing [cropperjs]("https://github.com/fengyuanchen/cropperjs")
 - Supports cropping on demand with a button
 
 ## References
-[https://github.com/fengyuanchen/cropperjs]("https://github.com/fengyuanchen/cropperjs")
+[https://github.com/fengyuanchen/cropperjs](https://github.com/fengyuanchen/cropperjs)
