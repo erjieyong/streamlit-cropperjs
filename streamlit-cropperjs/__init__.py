@@ -1,9 +1,7 @@
-import io
 import os
 
 import streamlit as st
 import streamlit.components.v1 as components
-from PIL import Image
 
 # Create a _RELEASE constant. We'll set this to False while we're developing
 # the component, and True when we're ready to package and distribute it.
@@ -89,38 +87,10 @@ def streamlit_cropperjs(pic, btn_text, key=None):
 # During development, we can run this just as we would any other Streamlit
 # app: `$ streamlit run streamlit_cropperjs/__init__.py`
 if not _RELEASE:
-    import streamlit as st
-
     st.subheader("Streamlit-Cropperjs")
-
-    # Create a second instance of our component whose `name` arg will vary
-    # based on a text_input widget.
-    #
-    # We use the special "key" argument to assign a fixed identity to this
-    # component instance. By default, when a component's arguments change,
-    # it is considered a new instance and will be re-mounted on the frontend
-    # and lose its current state. In this case, we want to vary the component's
-    # "name" argument without having it get recreated.
     pic = st.camera_input("Upload a picture", key="uploaded_pic")
     if pic:
         pic = pic.read()
         cropped_pic = streamlit_cropperjs(pic=pic, btn_text="Detect!", key="foo")
-        if cropped_pic:
-            st.image(cropped_pic, output_format="PNG")
-if _RELEASE:
-    pic = st.camera_input("Upload a picture", key="uploaded_pic")
-    if pic:
-        pic = pic.read()
-        cropped_pic = streamlit_cropperjs(pic=pic, btn_text="Detect!", key="foo")
-        # pic = Image.open(pic)
-        # pic.thumbnail((512, 512), Image.Resampling.LANCZOS)
-
-        # img_byte_array = io.BytesIO()
-        # pic.save(img_byte_array, format="PNG", subsampling=0, quality=100)
-
-        # # st.image(pic)
-        # cropped_pic = streamlit_cropperjs(
-        #     pic=img_byte_array.getvalue(), btn_text="Detect!", key="foo"
-        # )
         if cropped_pic:
             st.image(cropped_pic, output_format="PNG")
