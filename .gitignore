@@ -1,4 +1,4 @@
-streamlit-cropperjs/frontend/node_modules
+streamlit_cropperjs/frontend/node_modules
 build/
 dist/
 *.egg/
