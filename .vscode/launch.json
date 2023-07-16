@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "npm start debug",
-            "cwd": "C:/Users/kyunomi/Desktop/streamlit-cropperjs/streamlit-cropperjs/frontend",
+            "cwd": "C:/Users/kyunomi/Desktop/streamlit-cropperjs/streamlit_cropperjs/frontend",
             // "skipFiles": [
             //     "<node_internals>/**"
             // ],
@@ -26,7 +26,7 @@
             "request": "attach",
             "name": "Attach by Process ID",
             "processId": "${command:PickProcess}"
-            "remoteRoot": "/streamlit-cropperjs/frontend"
+            "remoteRoot": "/streamlit_cropperjs/frontend"
         },
         {
             // "name": "Python: Current File",
