@@ -63,37 +63,36 @@ function onRender(event: Event): void {
   let arrayBufferView = new Uint8Array(pic);
   // display the image
   img.src = URL.createObjectURL(
-    new Blob([arrayBufferView], { type: 'image/png' } /* (1) */)
+    new Blob([arrayBufferView], { type: 'image/png' })
   );
-  img.style.maxHeight = "100%"
+  imageDiv.style.maxWidth = "100%"
   img.style.maxWidth = "100%"
   img.id = data.args["key"]
 
-  
-  // Cropper.js
-  var cropper = new Cropper(img, {
-    autoCropArea: 0.5,
-    viewMode: 2,
-    guides: false,
-    rotatable: false,
-    ready: function (){
-      // We tell Streamlit to update our frameHeight after each render event, in
-      // case it has changed. (This isn't strictly necessary for the example
-      // because our height stays fixed, but this is a low-cost function, so
-      // there's no harm in doing it redundantly.)
-      // wait for image to load finish first before runnning setFrameHeight
-      Streamlit.setFrameHeight()
-
-      // Add event listener to our button.
-      // Send image data back to streamlit once button clicked
-      button.addEventListener('click', function() {
-        var croppedImage = cropper.getCroppedCanvas().toDataURL("image/png");
-        // Push croppedImage to streamlit backend
-        Streamlit.setComponentValue(croppedImage)
-      })
-    },
-  });
+  img.onload = function() {
+    // Cropper.js
+    var cropper = new Cropper(img, {
+      autoCropArea: 0.5,
+      viewMode: 2,
+      center: true,
+      guides: false,
+      rotatable: false,
+      minContainerHeight:img.naturalHeight,
+      ready: function (){
+        // Add event listener to our button.
+        // Send image data back to streamlit once button clicked
+        button.addEventListener('click', function() {
+          var croppedImage = cropper.getCroppedCanvas().toDataURL("image/png");
+          // Push croppedImage to streamlit backend
+          Streamlit.setComponentValue(croppedImage)
+        })
+        Streamlit.setFrameHeight()
+      },
+    });
+  }
 }
+
+// ADD DESTROY BUTTON SO TAHT THE CROPPERJS WILL NOT SHOW ANYMORE
 
 // Attach our `onRender` handler to Streamlit's render event.
 Streamlit.events.addEventListener(Streamlit.RENDER_EVENT, onRender)
