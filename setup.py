@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="streamlit-cropperjs",
-    version="0.0.1",
+    version="0.0.2",
     author="erjieyong",
     author_email="erjieyong@gmail.com",
     description="A streamlit module integrating cropperjs",
