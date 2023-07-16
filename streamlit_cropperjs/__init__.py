@@ -11,7 +11,7 @@ _RELEASE = True
 
 # Declare a Streamlit component. `declare_component` returns a function
 # that is used to create instances of the component. We're naming this
-# function "_streamlit_cropperjs", with an underscore prefix, because we don't want
+# function "_st_cropperjs", with an underscore prefix, because we don't want
 # to expose it directly to users. Instead, we will create a custom wrapper
 # function, below, that will serve as our component's public API.
 
@@ -21,11 +21,11 @@ _RELEASE = True
 # best practice.
 
 if not _RELEASE:
-    _streamlit_cropperjs = components.declare_component(
-        # We give the component a simple, descriptive name ("streamlit_cropperjs"
+    _st_cropperjs = components.declare_component(
+        # We give the component a simple, descriptive name ("st_cropperjs"
         # does not fit this bill, so please choose something better for your
         # own component :)
-        "streamlit_cropperjs",
+        "st_cropperjs",
         # Pass `url` here to tell Streamlit that the component will be served
         # by the local dev server that you run via `npm run start`.
         # (This is useful while your component is in development.)
@@ -37,9 +37,7 @@ else:
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
-    _streamlit_cropperjs = components.declare_component(
-        "streamlit_cropperjs", path=build_dir
-    )
+    _st_cropperjs = components.declare_component("st_cropperjs", path=build_dir)
 
 
 # Create a wrapper function for the component. This is an optional
@@ -47,8 +45,8 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def streamlit_cropperjs(pic, btn_text, key=None):
-    """Create a new instance of "streamlit_cropperjs".
+def st_cropperjs(pic, btn_text, key=None):
+    """Create a new instance of "st_cropperjs".
 
     Parameters
     ----------
@@ -74,9 +72,7 @@ def streamlit_cropperjs(pic, btn_text, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _streamlit_cropperjs(
-        pic=pic, btn_text=btn_text, key=key, default=None
-    )
+    component_value = _st_cropperjs(pic=pic, btn_text=btn_text, key=key, default=None)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
@@ -85,12 +81,12 @@ def streamlit_cropperjs(pic, btn_text, key=None):
 
 # Add some test code to play with the component while it's in development.
 # During development, we can run this just as we would any other Streamlit
-# app: `$ streamlit run streamlit_cropperjs/__init__.py`
+# app: `$ streamlit run st_cropperjs/__init__.py`
 if not _RELEASE:
     st.subheader("Streamlit-Cropperjs")
     pic = st.camera_input("Upload a picture", key="uploaded_pic")
     if pic:
         pic = pic.read()
-        cropped_pic = streamlit_cropperjs(pic=pic, btn_text="Detect!", key="foo")
+        cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", key="foo")
         if cropped_pic:
             st.image(cropped_pic, output_format="PNG")
