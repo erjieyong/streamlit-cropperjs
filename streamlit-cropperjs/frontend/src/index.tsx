@@ -9,25 +9,14 @@ const img = imageDiv.appendChild(document.createElement("img"))
 const btnDiv = document.body.appendChild(document.createElement("div"))
 const button = btnDiv.appendChild(document.createElement("button"))
 // add cropperjs stylesheet. This is needed for cropperjs to work properly
-const link = document.head.appendChild(document.createElement("link"))
-link.rel = "stylesheet";
-link.href = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
+const cropperStyle = document.head.appendChild(document.createElement("link"))
+cropperStyle.rel = "stylesheet";
+cropperStyle.href = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
+// add custom style
+const customStyle = document.head.appendChild(document.createElement("style"))
 
-// Prepare our button with focus detection
-button.style.padding = "0.25rem 0.75rem"
-button.style.backgroundColor = "white"
-button.style.borderRadius = "0.5rem"
+// Set styling for button div
 btnDiv.style.marginTop = "1rem"
-
-let isFocused = false
-
-button.onfocus = function(): void {
-  isFocused = true
-}
-
-button.onblur = function(): void {
-  isFocused = false
-}
 
 /**
  * The component's render function. This will be called immediately after
@@ -43,13 +32,22 @@ function onRender(event: Event): void {
   if (data.theme) {
     // Use CSS vars to style our button border. Alternatively, the theme style
     // is defined in the data.theme object.
-    const borderStyling = `1px solid var(${
-      isFocused ? "--primary-color" : "gray"
-    })`
-    button.style.border = borderStyling
-    button.style.outline = borderStyling
-    button.style.color = `var(${isFocused ? "--primary-color" : "red"})`
+  customStyle.innerHTML = `
+  button {
+    border-radius: 0.5rem;
+    border: 1px solid rgba(49, 51, 63, 0.2);
+    padding: 0.25rem 0.75rem;
+    background-color: var(${"--background-color"});
+    color: var(${"--text-color"});
+    font-family: var(${"--font"});
   }
+
+  button:focus {
+    color: var(${"--primary-color"});
+    border: 1px solid var(${"--primary-color"});
+    outline: 1px solid var(${"--primary-color"});
+  }`
+}
 
   // Display button text
   button.textContent = data.args["btn_text"]

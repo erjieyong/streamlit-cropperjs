@@ -1,7 +1,7 @@
-import base64
 import os
 
 import numpy as np
+import streamlit as st
 import streamlit.components.v1 as components
 
 # Create a _RELEASE constant. We'll set this to False while we're developing
