@@ -1,13 +1,19 @@
+# read the contents of your README file
+from pathlib import Path
+
 import setuptools
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-cropperjs",
-    version="0.0.2",
+    version="0.0.5",
     author="erjieyong",
     author_email="erjieyong@gmail.com",
     description="A streamlit module integrating cropperjs",
-    long_description="",
-    long_description_content_type="text/plain",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/erjieyong/streamlit-cropperjs",
     packages=setuptools.find_packages(),
     include_package_data=True,
