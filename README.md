@@ -5,6 +5,9 @@ Integrating the amazing [cropperjs](https://github.com/fengyuanchen/cropperjs) w
 This streamlit module is primarily built with mobile usage in mind.
 
 ![](https://github.com/erjieyong/streamlit-cropperjs/blob/main/streamlit-cropperjs-demo.gif)
+## Demo
+Access the demo app here: [https://st-cropperjs.streamlit.app/](https://st-cropperjs.streamlit.app/)
+
 ## Installation
 `pip install streamlit-cropperjs`
 
@@ -21,7 +24,6 @@ if pic:
     if cropped_pic:
         st.image(cropped_pic, output_format="PNG")
 ```
-
 ## Features
 - Crop and return image data
 - Supports touch (mobile)
