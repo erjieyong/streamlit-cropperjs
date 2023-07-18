@@ -84,7 +84,7 @@ def st_cropperjs(pic, btn_text, key=None):
 # app: `$ streamlit run st_cropperjs/__init__.py`
 if not _RELEASE:
     st.subheader("Streamlit-Cropperjs")
-    pic = st.camera_input("Upload a picture", key="uploaded_pic")
+    pic = st.file_uploader("Upload a picture", key="uploaded_pic")
     if pic:
         pic = pic.read()
         cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", key="foo")

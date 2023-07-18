@@ -77,7 +77,7 @@ function onRender(event: Event): void {
       center: true,
       guides: false,
       rotatable: false,
-      minContainerHeight:img.naturalHeight,
+      minContainerHeight:imageDiv.clientWidth/img.naturalWidth*img.naturalHeight,
       ready: function (){
         // Add event listener to our button.
         // Send image data back to streamlit once button clicked
