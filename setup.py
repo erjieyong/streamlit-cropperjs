@@ -8,7 +8,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-cropperjs",
-    version="0.0.6",
+    version="0.0.7",
     author="erjieyong",
     author_email="erjieyong@gmail.com",
     description="A streamlit module integrating cropperjs",
