@@ -10,3 +10,6 @@ if pic:
     cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", key="foo")
     if cropped_pic:
         st.image(cropped_pic, output_format="PNG")
+        st.download_button(
+            "Download", cropped_pic, file_name="output.png", mime="image/png"
+        )

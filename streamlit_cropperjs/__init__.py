@@ -1,4 +1,6 @@
+import base64
 import os
+from io import BytesIO
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -50,9 +52,10 @@ def st_cropperjs(pic, btn_text, key=None):
 
     Parameters
     ----------
-    name: str
-        The name of the thing we're saying hello to. The component will display
-        the text "Hello, {name}!"
+    pic: bytes
+        The image file that you want to crop. It should be in bytes format
+    btn_text: str
+        A custom name for the crop button
     key: str or None
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will
@@ -60,10 +63,8 @@ def st_cropperjs(pic, btn_text, key=None):
 
     Returns
     -------
-    int
-        The number of times the component's "Click Me" button has been clicked.
-        (This is the value passed to `Streamlit.setComponentValue` on the
-        frontend.)
+    bytes
+        The cropped image file in bytes format
 
     """
     # Call through to our private component function. Arguments we pass here
@@ -72,11 +73,17 @@ def st_cropperjs(pic, btn_text, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _st_cropperjs(pic=pic, btn_text=btn_text, key=key, default=None)
+    # cropped_pic is returned as a base64 image in string format
+    cropped_pic = _st_cropperjs(pic=pic, btn_text=btn_text, key=key, default=None)
 
-    # We could modify the value returned from the component if we wanted.
-    # There's no need to do this in our simple example - but it's an option.
-    return component_value
+    if cropped_pic:
+        cropped_pic_base64 = base64.b64decode(
+            cropped_pic.split("data:image/png;base64,")[1]
+        )
+
+        cropped_pic_bytes = BytesIO(cropped_pic_base64).getvalue()
+
+        return cropped_pic_bytes
 
 
 # Add some test code to play with the component while it's in development.
@@ -90,3 +97,6 @@ if not _RELEASE:
         cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", key="foo")
         if cropped_pic:
             st.image(cropped_pic, output_format="PNG")
+            st.download_button(
+                "Download", cropped_pic, file_name="output.png", mime="image/png"
+            )
