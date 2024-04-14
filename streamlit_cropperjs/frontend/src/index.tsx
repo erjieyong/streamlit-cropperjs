@@ -1,5 +1,5 @@
-import Cropper from "cropperjs";
-import { RenderData, Streamlit } from "streamlit-component-lib";
+import Cropper from "cropperjs"
+import { RenderData, Streamlit } from "streamlit-component-lib"
 
 // Add image div and btn div. Separately add img and button to respective div
 // if we put them into same div, cropperjs will somehow generate the cropper tool
@@ -10,8 +10,9 @@ const btnDiv = document.body.appendChild(document.createElement("div"))
 const button = btnDiv.appendChild(document.createElement("button"))
 // add cropperjs stylesheet. This is needed for cropperjs to work properly
 const cropperStyle = document.head.appendChild(document.createElement("link"))
-cropperStyle.rel = "stylesheet";
-cropperStyle.href = "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css";
+cropperStyle.rel = "stylesheet"
+cropperStyle.href =
+  "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
 // add custom style
 const customStyle = document.head.appendChild(document.createElement("style"))
 
@@ -32,7 +33,7 @@ function onRender(event: Event): void {
   if (data.theme) {
     // Use CSS vars to style our button border. Alternatively, the theme style
     // is defined in the data.theme object.
-  customStyle.innerHTML = `
+    customStyle.innerHTML = `
   button {
     border-radius: 0.5rem;
     border: 1px solid rgba(49, 51, 63, 0.2);
@@ -47,29 +48,28 @@ function onRender(event: Event): void {
     border: 1px solid var(${"--primary-color"});
     outline: 1px solid var(${"--primary-color"});
   }`
-}
+  }
 
   // Display button text
   button.textContent = data.args["btn_text"]
-  
+
   // Disable our button if necessary.
   button.disabled = data.disabled
-  
 
   // RenderData.args is the JSON dictionary of arguments sent from the
   // Python script.
   let pic = data.args["pic"]
   // convert the pic into uint8array
-  let arrayBufferView = new Uint8Array(pic);
+  let arrayBufferView = new Uint8Array(pic)
   // display the image
   img.src = URL.createObjectURL(
-    new Blob([arrayBufferView], { type: 'image/png' })
-  );
+    new Blob([arrayBufferView], { type: "image/png" })
+  )
   imageDiv.style.maxWidth = "100%"
   img.style.maxWidth = "100%"
   img.id = data.args["key"]
 
-  img.onload = function() {
+  img.onload = function () {
     // Cropper.js
     var cropper = new Cropper(img, {
       autoCropArea: 0.5,
@@ -77,18 +77,21 @@ function onRender(event: Event): void {
       center: true,
       guides: false,
       rotatable: false,
-      minContainerHeight:imageDiv.clientWidth/img.naturalWidth*img.naturalHeight,
-      ready: function (){
+      minContainerHeight:
+        (imageDiv.clientWidth / img.naturalWidth) *
+        img.naturalHeight *
+        data.args["size"],
+      ready: function () {
         // Add event listener to our button.
         // Send image data back to streamlit once button clicked
-        button.addEventListener('click', function() {
-          var croppedImage = cropper.getCroppedCanvas().toDataURL("image/png");
+        button.addEventListener("click", function () {
+          var croppedImage = cropper.getCroppedCanvas().toDataURL("image/png")
           // Push croppedImage to streamlit backend
           Streamlit.setComponentValue(croppedImage)
         })
         Streamlit.setFrameHeight()
       },
-    });
+    })
   }
 }
 

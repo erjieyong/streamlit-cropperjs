@@ -47,7 +47,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def st_cropperjs(pic, btn_text, key=None):
+def st_cropperjs(pic, btn_text, size=1.0, key=None):
     """Create a new instance of "st_cropperjs".
 
     Parameters
@@ -56,6 +56,8 @@ def st_cropperjs(pic, btn_text, key=None):
         The image file that you want to crop. It should be in bytes format
     btn_text: str
         A custom name for the crop button
+    size: float
+        Increase or decrease the size of the crop window by a magnitude of size value
     key: str or None
         An optional key that uniquely identifies this component. If this is
         None, and the component's arguments are changed, the component will
@@ -74,7 +76,9 @@ def st_cropperjs(pic, btn_text, key=None):
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
     # cropped_pic is returned as a base64 image in string format
-    cropped_pic = _st_cropperjs(pic=pic, btn_text=btn_text, key=key, default=None)
+    cropped_pic = _st_cropperjs(
+        pic=pic, btn_text=btn_text, size=size, key=key, default=None
+    )
 
     if cropped_pic:
         cropped_pic_base64 = base64.b64decode(
@@ -94,7 +98,7 @@ if not _RELEASE:
     pic = st.file_uploader("Upload a picture", key="uploaded_pic")
     if pic:
         pic = pic.read()
-        cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", key="foo")
+        cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", size=0.5, key="foo")
         if cropped_pic:
             st.image(cropped_pic, output_format="PNG")
             st.download_button(

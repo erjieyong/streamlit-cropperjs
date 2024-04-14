@@ -7,7 +7,7 @@ st.write("Integrating cropperjs by fengyuanchen with streamlit")
 pic = st.file_uploader("Upload a picture", key="uploaded_pic")
 if pic:
     pic = pic.read()
-    cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", key="foo")
+    cropped_pic = st_cropperjs(pic=pic, btn_text="Detect!", size=0.5, key="foo")
     if cropped_pic:
         st.image(cropped_pic, output_format="PNG")
         st.download_button(
